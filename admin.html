@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aster &amp; Oak Events | Enquiries Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-glow page-glow-one"></div>
+    <div class="page-glow page-glow-two"></div>
+
+    <header class="site-header">
+        <a href="/" class="brand">Aster<span>&amp;Oak</span></a>
+        <nav class="site-nav">
+            <a href="/">Back to site</a>
+            <a href="/admin.html" class="nav-pill">Enquiries Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="section admin-page">
+        <section class="admin-hero reveal">
+            <p class="eyebrow">Admin</p>
+            <h1>Track and review incoming event enquiries.</h1>
+            <p>
+                This page reads the stored submissions from the backend and gives you a simple view
+                of new leads without needing a database tool.
+            </p>
+        </section>
+
+        <section class="admin-toolbar reveal">
+            <input id="searchInput" class="admin-search" type="search" placeholder="Search by name, city, event type, or budget">
+            <button id="refreshButton" class="primary-btn" type="button">Refresh Enquiries</button>
+        </section>
+
+        <section id="adminStats" class="admin-stats reveal"></section>
+        <section id="enquiryList" class="admin-grid reveal"></section>
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>

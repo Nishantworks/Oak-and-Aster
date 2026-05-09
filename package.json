@@ -1,0 +1,16 @@
+{
+  "name": "event-management-website",
+  "version": "1.0.0",
+  "description": "Modern event management website with a booking form and Express backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "events",
+    "express",
+    "booking"
+  ],
+  "author": "",
+  "license": "ISC"
+}
