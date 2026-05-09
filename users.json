@@ -1,0 +1,18 @@
+[
+  {
+    "id": "user-1778289698025",
+    "name": "Test User",
+    "email": "testuser-demo@example.com",
+    "password": "Pass1234",
+    "role": "user",
+    "createdAt": "2026-05-09T01:21:38.027Z"
+  },
+  {
+    "id": "admin-1",
+    "name": "Admin User",
+    "email": "admin@oakandaster.com",
+    "password": "Admin@123",
+    "role": "admin",
+    "createdAt": "2026-05-09T00:00:00.000Z"
+  }
+]

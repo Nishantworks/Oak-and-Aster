@@ -1,0 +1,34 @@
+[
+  {
+    "id": "wedding-luxe",
+    "title": "Luxury Wedding Weekend",
+    "category": "Wedding",
+    "price": "Starting from 3,50,000 INR",
+    "location": "Delhi, Jaipur, Udaipur",
+    "description": "A premium multi-day wedding experience with decor, hospitality, artist coordination, and guest flow design."
+  },
+  {
+    "id": "corporate-launch",
+    "title": "Corporate Launch Experience",
+    "category": "Corporate",
+    "price": "Starting from 1,80,000 INR",
+    "location": "Noida, Gurugram, Bengaluru",
+    "description": "Built for product launches, award nights, conferences, and curated brand activations with polished execution."
+  },
+  {
+    "id": "private-soiree",
+    "title": "Private Celebration Soiree",
+    "category": "Private Event",
+    "price": "Starting from 95,000 INR",
+    "location": "Mumbai, Pune, Kolkata",
+    "description": "A design-led social event experience for birthdays, anniversaries, engagements, and bespoke milestone moments."
+  },
+  {
+    "id": "destination-retreat",
+    "title": "Destination Retreat Event",
+    "category": "Destination",
+    "price": "Starting from 4,20,000 INR",
+    "location": "Goa, Mussoorie, Kerala",
+    "description": "A complete travel-meets-event package for destination stays, curated guest experiences, and full production handling."
+  }
+]

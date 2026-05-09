@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oak &amp; Aster | Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-glow page-glow-one"></div>
+    <div class="page-glow page-glow-two"></div>
+
+    <header class="site-header">
+        <a href="/" class="brand">Oak<span>&amp;Aster</span></a>
+        <nav class="site-nav">
+            <a href="/">Home</a>
+            <a href="/events.html">Events</a>
+            <a href="/booking.html">Booking</a>
+            <a href="/login.html">Login</a>
+            <a href="/admin.html" class="nav-pill">Admin Panel</a>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        <section class="auth-layout reveal">
+            <div class="auth-copy">
+                <p class="eyebrow">Registration</p>
+                <h1>Create your account for faster event bookings.</h1>
+                <p>
+                    Register as a user to access a cleaner project flow and save your details before making a booking enquiry.
+                </p>
+            </div>
+
+            <form id="registerForm" class="auth-card">
+                <label>
+                    <span>Full Name</span>
+                    <input type="text" id="registerName" placeholder="Your full name" required>
+                </label>
+                <label>
+                    <span>Email Address</span>
+                    <input type="email" id="registerEmail" placeholder="you@example.com" required>
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" id="registerPassword" placeholder="Create a password" required>
+                </label>
+                <button type="submit" class="primary-btn wide-btn">Register</button>
+                <p id="registerResponse" class="form-response" aria-live="polite"></p>
+                <p class="auth-switch">Already have an account? <a href="/login.html">Login</a></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>

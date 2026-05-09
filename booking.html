@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oak &amp; Aster | Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-glow page-glow-one"></div>
+    <div class="page-glow page-glow-two"></div>
+
+    <header class="site-header">
+        <a href="/" class="brand">Oak<span>&amp;Aster</span></a>
+        <nav class="site-nav">
+            <a href="/">Home</a>
+            <a href="/events.html">Events</a>
+            <a href="/booking.html">Booking</a>
+            <a href="/login.html">Login</a>
+            <a href="/register.html">Register</a>
+            <a href="/admin.html" class="nav-pill">Admin Panel</a>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        <section class="page-hero reveal">
+            <p class="eyebrow">Booking Page</p>
+            <h1>Submit a structured event booking request.</h1>
+            <p>This page is separate from the home page so your project now includes a dedicated booking module.</p>
+        </section>
+
+        <section class="section compact-section">
+            <div class="booking-layout">
+                <div class="booking-info reveal">
+                    <article class="info-card">
+                        <h3>Before You Submit</h3>
+                        <p>Choose the right event type, mention your city, and share clear expectations so the admin panel receives useful details.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>User-Friendly Flow</h3>
+                        <p>If you are logged in, your saved name and email can be filled automatically to make booking faster.</p>
+                    </article>
+                </div>
+
+                <form id="bookingFormPage" class="booking-form reveal">
+                    <div class="form-row">
+                        <label>
+                            <span>Full Name</span>
+                            <input type="text" id="bookingName" required>
+                        </label>
+                        <label>
+                            <span>Email Address</span>
+                            <input type="email" id="bookingEmail" required>
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <label>
+                            <span>Phone Number</span>
+                            <input type="tel" id="bookingPhone" required>
+                        </label>
+                        <label>
+                            <span>Event Type</span>
+                            <select id="bookingEventType" required>
+                                <option value="" selected disabled>Select event type</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <label>
+                            <span>Event Date</span>
+                            <input type="date" id="bookingDate" required>
+                        </label>
+                        <label>
+                            <span>City</span>
+                            <input type="text" id="bookingCity" placeholder="Delhi, Jaipur, Mumbai..." required>
+                        </label>
+                    </div>
+                    <div class="form-row">
+                        <label>
+                            <span>Estimated Guests</span>
+                            <input type="number" id="bookingGuests" min="1" placeholder="150" required>
+                        </label>
+                        <label>
+                            <span>Budget Range</span>
+                            <select id="bookingBudget" required>
+                                <option value="" selected disabled>Select budget range</option>
+                                <option value="Under 2 lakh">Under 2 lakh</option>
+                                <option value="2 to 5 lakh">2 to 5 lakh</option>
+                                <option value="5 to 10 lakh">5 to 10 lakh</option>
+                                <option value="10 lakh and above">10 lakh and above</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label>
+                        <span>Event Vision</span>
+                        <textarea id="bookingMessage" rows="5" placeholder="Tell us about your event mood, venue ideas, decor, or schedule." required></textarea>
+                    </label>
+                    <button id="bookingSubmitButton" type="submit" class="primary-btn wide-btn">Submit Booking</button>
+                    <p id="bookingResponse" class="form-response" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="booking.js"></script>
+</body>
+</html>

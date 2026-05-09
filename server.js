@@ -2,8 +2,12 @@ const fs = require("fs");
 const http = require("http");
 const path = require("path");
 const { URL } = require("url");
+
 const PORT = process.env.PORT || 3000;
-const storagePath = path.join(__dirname, "bookings.json");
+const dataDir = __dirname;
+const bookingsPath = path.join(dataDir, "bookings.json");
+const usersPath = path.join(dataDir, "users.json");
+const eventsPath = path.join(dataDir, "events.json");
 
 const mimeTypes = {
     ".css": "text/css; charset=utf-8",
@@ -16,39 +20,101 @@ const mimeTypes = {
     ".svg": "image/svg+xml"
 };
 
-function readBookingsFile() {
-    if (!fs.existsSync(storagePath)) {
-        fs.writeFileSync(storagePath, "[]", "utf8");
+const defaultUsers = [
+    {
+        id: "admin-1",
+        name: "Admin User",
+        email: "admin@oakandaster.com",
+        password: "Admin@123",
+        role: "admin",
+        createdAt: new Date().toISOString()
     }
+];
 
-    const raw = fs.readFileSync(storagePath, "utf8");
+const defaultEvents = [
+    {
+        id: "wedding-luxe",
+        title: "Luxury Wedding Weekend",
+        category: "Wedding",
+        price: "Starting from 3,50,000 INR",
+        location: "Delhi, Jaipur, Udaipur",
+        description: "A premium multi-day wedding experience with decor, hospitality, artist coordination, and guest flow design."
+    },
+    {
+        id: "corporate-launch",
+        title: "Corporate Launch Experience",
+        category: "Corporate",
+        price: "Starting from 1,80,000 INR",
+        location: "Noida, Gurugram, Bengaluru",
+        description: "Built for product launches, award nights, conferences, and curated brand activations with polished execution."
+    },
+    {
+        id: "private-soiree",
+        title: "Private Celebration Soiree",
+        category: "Private Event",
+        price: "Starting from 95,000 INR",
+        location: "Mumbai, Pune, Kolkata",
+        description: "A design-led social event experience for birthdays, anniversaries, engagements, and bespoke milestone moments."
+    },
+    {
+        id: "destination-retreat",
+        title: "Destination Retreat Event",
+        category: "Destination",
+        price: "Starting from 4,20,000 INR",
+        location: "Goa, Mussoorie, Kerala",
+        description: "A complete travel-meets-event package for destination stays, curated guest experiences, and full production handling."
+    }
+];
+
+function ensureFile(filePath, defaultValue) {
+    if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), "utf8");
+    }
+}
+
+function readJson(filePath, fallback) {
+    ensureFile(filePath, fallback);
+    const raw = fs.readFileSync(filePath, "utf8");
     return JSON.parse(raw);
 }
 
-function writeBookingsFile(bookings) {
-    fs.writeFileSync(storagePath, JSON.stringify(bookings, null, 2), "utf8");
+function writeJson(filePath, value) {
+    fs.writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
 }
 
-async function saveBooking(payload) {
-    const bookings = readBookingsFile();
-    const newBooking = {
-        id: Date.now().toString(),
-        status: "New",
-        ...payload,
-        createdAt: new Date().toISOString()
-    };
-    bookings.unshift(newBooking);
-    writeBookingsFile(bookings);
-    return newBooking;
+function readBookings() {
+    return readJson(bookingsPath, []);
 }
 
-async function getBookings() {
-    return readBookingsFile();
+function writeBookings(bookings) {
+    writeJson(bookingsPath, bookings);
+}
+
+function readUsers() {
+    const users = readJson(usersPath, defaultUsers);
+    const hasAdmin = users.some((user) => user.role === "admin");
+
+    if (!hasAdmin) {
+        users.unshift(defaultUsers[0]);
+        writeJson(usersPath, users);
+    }
+
+    return users;
+}
+
+function writeUsers(users) {
+    writeJson(usersPath, users);
+}
+
+function readEvents() {
+    return readJson(eventsPath, defaultEvents);
 }
 
 function sendJson(res, statusCode, payload) {
     res.writeHead(statusCode, {
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json; charset=utf-8"
     });
     res.end(JSON.stringify(payload));
@@ -95,6 +161,28 @@ function resolveStaticPath(urlPath) {
     return path.join(__dirname, target);
 }
 
+function sanitizeUser(user) {
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+    };
+}
+
+function getDashboardStats() {
+    const bookings = readBookings();
+    const users = readUsers();
+    const events = readEvents();
+
+    return {
+        totalBookings: bookings.length,
+        newBookings: bookings.filter((booking) => booking.status === "New").length,
+        totalUsers: users.length,
+        totalEvents: events.length
+    };
+}
+
 const server = http.createServer(async (req, res) => {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);
 
@@ -105,6 +193,85 @@ const server = http.createServer(async (req, res) => {
             "Access-Control-Allow-Headers": "Content-Type"
         });
         res.end();
+        return;
+    }
+
+    if (req.method === "POST" && requestUrl.pathname === "/api/register") {
+        let payload;
+
+        try {
+            payload = await collectJsonBody(req);
+        } catch (error) {
+            sendJson(res, 400, { message: "Invalid JSON payload." });
+            return;
+        }
+
+        const { name, email, password } = payload;
+
+        if (!name || !email || !password) {
+            sendJson(res, 400, { message: "Please complete all registration fields." });
+            return;
+        }
+
+        const users = readUsers();
+        const existing = users.find((user) => user.email.toLowerCase() === String(email).toLowerCase());
+
+        if (existing) {
+            sendJson(res, 409, { message: "An account already exists with this email." });
+            return;
+        }
+
+        const newUser = {
+            id: `user-${Date.now()}`,
+            name: String(name).trim(),
+            email: String(email).trim(),
+            password: String(password),
+            role: "user",
+            createdAt: new Date().toISOString()
+        };
+
+        users.unshift(newUser);
+        writeUsers(users);
+        sendJson(res, 201, {
+            message: "Registration successful.",
+            user: sanitizeUser(newUser)
+        });
+        return;
+    }
+
+    if (req.method === "POST" && requestUrl.pathname === "/api/login") {
+        let payload;
+
+        try {
+            payload = await collectJsonBody(req);
+        } catch (error) {
+            sendJson(res, 400, { message: "Invalid JSON payload." });
+            return;
+        }
+
+        const { email, password } = payload;
+
+        if (!email || !password) {
+            sendJson(res, 400, { message: "Please enter email and password." });
+            return;
+        }
+
+        const users = readUsers();
+        const user = users.find(
+            (entry) =>
+                entry.email.toLowerCase() === String(email).toLowerCase() &&
+                entry.password === String(password)
+        );
+
+        if (!user) {
+            sendJson(res, 401, { message: "Invalid email or password." });
+            return;
+        }
+
+        sendJson(res, 200, {
+            message: "Login successful.",
+            user: sanitizeUser(user)
+        });
         return;
     }
 
@@ -131,7 +298,7 @@ const server = http.createServer(async (req, res) => {
         } = payload;
 
         if (!name || !email || !phone || !eventType || !eventDate || !city || !guestCount || !budget || !message) {
-            sendJson(res, 400, { message: "Please complete all required fields." });
+            sendJson(res, 400, { message: "Please complete all required booking fields." });
             return;
         }
 
@@ -142,37 +309,49 @@ const server = http.createServer(async (req, res) => {
             return;
         }
 
-        try {
-            await saveBooking({
-                name,
-                email,
-                phone,
-                eventType,
-                eventDate,
-                city,
-                guestCount: parsedGuests,
-                budget,
-                message
-            });
+        const bookings = readBookings();
+        const newBooking = {
+            id: `booking-${Date.now()}`,
+            status: "New",
+            name: String(name).trim(),
+            email: String(email).trim(),
+            phone: String(phone).trim(),
+            eventType: String(eventType).trim(),
+            eventDate: String(eventDate).trim(),
+            city: String(city).trim(),
+            guestCount: parsedGuests,
+            budget: String(budget).trim(),
+            message: String(message).trim(),
+            createdAt: new Date().toISOString()
+        };
 
-            sendJson(res, 201, {
-                message: "Thanks. Your event enquiry was received and is ready for follow-up."
-            });
-        } catch (error) {
-            console.error("Booking save failed:", error);
-            sendJson(res, 500, { message: "Unable to save the enquiry right now." });
-        }
+        bookings.unshift(newBooking);
+        writeBookings(bookings);
+        sendJson(res, 201, {
+            message: "Your booking enquiry has been submitted successfully.",
+            booking: newBooking
+        });
+        return;
+    }
+
+    if (req.method === "GET" && requestUrl.pathname === "/api/events") {
+        sendJson(res, 200, readEvents());
         return;
     }
 
     if (req.method === "GET" && (requestUrl.pathname === "/api/bookings" || requestUrl.pathname === "/api/enquiries")) {
-        try {
-            const bookings = await getBookings();
-            sendJson(res, 200, bookings);
-        } catch (error) {
-            console.error("Booking fetch failed:", error);
-            sendJson(res, 500, { message: "Unable to fetch enquiries right now." });
-        }
+        sendJson(res, 200, readBookings());
+        return;
+    }
+
+    if (req.method === "GET" && requestUrl.pathname === "/api/dashboard") {
+        sendJson(res, 200, getDashboardStats());
+        return;
+    }
+
+    if (req.method === "GET" && requestUrl.pathname === "/api/users") {
+        const users = readUsers().map(sanitizeUser);
+        sendJson(res, 200, users);
         return;
     }
 
@@ -189,9 +368,9 @@ const server = http.createServer(async (req, res) => {
     sendJson(res, 405, { message: "Method not allowed." });
 });
 
-if (!fs.existsSync(storagePath)) {
-    fs.writeFileSync(storagePath, "[]", "utf8");
-}
+ensureFile(bookingsPath, []);
+ensureFile(usersPath, defaultUsers);
+ensureFile(eventsPath, defaultEvents);
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

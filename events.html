@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oak &amp; Aster | Admin Panel</title>
+    <title>Oak &amp; Aster | Events</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
@@ -25,30 +25,19 @@
         </nav>
     </header>
 
-    <main class="page-shell admin-page">
+    <main class="page-shell">
         <section class="page-hero reveal">
-            <p class="eyebrow">Admin Panel</p>
-            <h1>Monitor users, event enquiries, and platform activity.</h1>
-            <p id="adminAccessMessage">Checking admin access...</p>
+            <p class="eyebrow">Event Catalog</p>
+            <h1>Browse the event formats available on the platform.</h1>
+            <p>Each event card below is connected to backend data so the page works like a real project module.</p>
         </section>
 
         <section class="section compact-section">
-            <div id="adminStats" class="admin-stats reveal"></div>
-        </section>
-
-        <section class="section compact-section">
-            <div class="admin-toolbar reveal">
-                <input id="searchInput" class="admin-search" type="search" placeholder="Search by name, city, email, event type, or budget">
-                <button id="refreshButton" class="primary-btn" type="button">Refresh Data</button>
-            </div>
-        </section>
-
-        <section class="section compact-section">
-            <div id="enquiryList" class="admin-grid reveal"></div>
+            <div id="eventsGrid" class="event-grid reveal"></div>
         </section>
     </main>
 
     <script src="app.js"></script>
-    <script src="admin.js"></script>
+    <script src="events.js"></script>
 </body>
 </html>
