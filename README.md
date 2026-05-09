@@ -1,6 +1,6 @@
-# Event Management Website
+# Oak-and-Aster
 
-An aesthetic event management website built for a final year project. The site includes a public-facing landing page, a detailed event enquiry form, and an admin page to review submitted enquiries.
+Oak-and-Aster is an aesthetic Gen-Z event management website built as a final year project. The site includes a public-facing landing page, a detailed event enquiry form, and an admin page to review submitted enquiries.
 
 ## Features
 
